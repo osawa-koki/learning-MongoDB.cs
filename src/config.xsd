@@ -6,6 +6,10 @@
 
       <xsd:element name="database_host" type="xsd:string" />
       <xsd:element name="database_port" type="xsd:nonNegativeInteger" />
+      <xsd:element name="database_username" type="xsd:string" />
+      <xsd:element name="database_password" type="xsd:string" />
+      <xsd:element name="database_database" type="xsd:string" />
+      <xsd:element name="database_collection" type="xsd:string" />
 
     </xsd:sequence>
   </xsd:complexType>
