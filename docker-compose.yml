@@ -10,8 +10,8 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./mongodb/db:/data/db
-      - ./mongodb/configdb:/data/configdb
+      - ./db/db:/data/db
+      - ./db/configdb:/data/configdb
   mongo-express:
     image: mongo-express
     container_name: mongo-express
