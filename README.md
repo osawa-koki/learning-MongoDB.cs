@@ -8,3 +8,5 @@
 docker compose up mongo -d
 docker compose up mongo-express -d
 ```
+
+<http://localhost:8081>へアクセス。  
