@@ -12,6 +12,8 @@ services:
     volumes:
       - ./db/db:/data/db
       - ./db/configdb:/data/configdb
+      - ./mongo/initdb.d:/docker-entrypoint-initdb.d
+    command: mongod --logpath /var/log/mongodb/mongod.log --dbpath /data/db --bind_ip_all
   mongo-express:
     image: mongo-express
     container_name: mongo-express

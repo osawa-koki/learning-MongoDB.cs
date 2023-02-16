@@ -1,2 +1,4 @@
 FROM mongo
-COPY init.js /docker-entrypoint-initdb.d
+
+ENV TZ="Asia/Tokyo"
+RUN echo $TZ > /etc/timezone
