@@ -10,3 +10,9 @@ docker compose up mongo-express -d
 ```
 
 <http://localhost:8081>へアクセス。  
+
+これでMongoDBのコンソールが見れる。  
+
+---
+
+Visual Studioからプログラムをデバグ実行すると、ランダムでデータの追加、更新、削除が行われる。  
