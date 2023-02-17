@@ -1,12 +1,15 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.Text.Json;
 using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Linq;
 
 internal static class Program
 {
+  private static readonly string[] names = new string[] { "Osawa", "Usukura", "Suzuki" };
+  private static readonly string[] professions = new string[] { "Programmer", "Engineer", "Designer" };
+  private static readonly int[] ages = new int[] { 15, 20, 25, 30, 35 };
+
   private static IMongoDatabase? database;
 
   internal static int Main()
@@ -101,8 +104,23 @@ internal static class Program
       var client = new MongoClient(mongo_settings);
       database = client.GetDatabase(database_database);
 
+      Console.Write("Press any key to fetch data..."); Console.ReadKey(); Console.WriteLine();
+      FetchData(database_collection);
+
+      Console.Write("Press any key to insert data..."); Console.ReadKey(); Console.WriteLine();
       InsertData(database_collection);
+
+      Console.Write("Press any key to find data..."); Console.ReadKey(); Console.WriteLine();
       FindData(database_collection);
+
+      Console.Write("Press any key to update data..."); Console.ReadKey(); Console.WriteLine();
+      UpdateData(database_collection);
+
+      Console.Write("Press any key to delete data..."); Console.ReadKey(); Console.WriteLine();
+      DeleteData(database_collection);
+
+      Console.Write("Press any key to fetch data..."); Console.ReadKey(); Console.WriteLine();
+      FetchData(database_collection);
 
       return 0;
     } catch (Exception ex)
@@ -114,11 +132,27 @@ internal static class Program
 
   internal static void InsertData(string collection_name)
   {
+    // 名前をランダムに選択
+    var name = names[new Random().Next(names.Length)];
+
+    // 職業をランダムに選択
+    var profession = professions[new Random().Next(professions.Length)];
+
+    // 年齢をランダムに選択
+    var age = ages[new Random().Next(ages.Length)];
+
+    Console.WriteLine($"★★★ Inserting data... ★★★");
+    Console.WriteLine($"name: {name}");
+    Console.WriteLine($"profession: {profession}");
+    Console.WriteLine($"age: {age}");
+    Console.WriteLine($"★★★ ★★★ ★★★ ★★★ ★★★");
+
     // ドキュメントを作成
     var document = new BsonDocument
       {
-        {"name", "John"},
-        {"age", 30}
+        {"name", name},
+        {"profession", profession},
+        {"age", age},
       };
 
     // コレクションを取得
@@ -133,14 +167,68 @@ internal static class Program
     // コレクションを取得
     var collection = database!.GetCollection<BsonDocument>(collection_name);
 
+    // 抽出する名前をランダムに選択
+    var name = names[new Random().Next(names.Length)];
+
     // 条件を指定してドキュメントを検索
-    var filter = Builders<BsonDocument>.Filter.Eq("name", "John");
+    var filter = Builders<BsonDocument>.Filter.Eq("name", name);
     var result = collection.Find(filter).ToList();
 
     // 検索結果を表示
+    Console.WriteLine($"----- Finding data... ({name}) -----");
     foreach (var document in result)
     {
       Console.WriteLine(document.ToJson());
     }
+    Console.WriteLine($"----- ----- ----- ----- ----- -----");
+  }
+
+  internal static void UpdateData(string collection_name)
+  {
+    // 変更前の年齢をランダムに選択
+    var old_age = ages[new Random().Next(ages.Length)];
+
+    // 変更後の年齢をランダムに選択
+    var new_age = ages[new Random().Next(ages.Length)];
+
+    // データの更新
+    var collection = database!.GetCollection<BsonDocument>(collection_name);
+    var filter = Builders<BsonDocument>.Filter.Eq("age", old_age);
+    var update = Builders<BsonDocument>.Update.Set("age", new_age);
+    collection.UpdateMany(filter, update);
+
+    // 変更前のデータを表示
+    Console.WriteLine($"----- Updating data... ({old_age} -> {new_age}) -----");
+    Console.WriteLine($"----- ----- ----- ----- ----- -----");
+  }
+
+  internal static void DeleteData(string collection_name)
+  {
+    // 削除する年齢をランダムに選択
+    var age = ages[new Random().Next(ages.Length)];
+
+    // データの削除
+    var collection = database!.GetCollection<BsonDocument>(collection_name);
+    var filter = Builders<BsonDocument>.Filter.Eq("age", age);
+    collection.DeleteMany(filter);
+
+    // 削除したデータを表示
+    Console.WriteLine($"----- Deleting data... ({age}) -----");
+    Console.WriteLine($"----- ----- ----- ----- ----- -----");
+  }
+
+  internal static void FetchData(string collection_name)
+  {
+    // 全てのデータを取得
+    var collection = database!.GetCollection<BsonDocument>(collection_name);
+    var result = collection.Find(new BsonDocument()).ToList();
+
+    // 検索結果を表示
+    Console.WriteLine($"===== Fetching data... =====");
+    foreach (var document in result)
+    {
+      Console.WriteLine(document.ToJson());
+    }
+    Console.WriteLine($"===== ===== ===== ===== =====");
   }
 }
